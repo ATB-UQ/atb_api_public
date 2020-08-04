@@ -6,16 +6,14 @@ import json
 import pickle
 from operator import itemgetter
 from os import getpid
-from copy import deepcopy
 import sys
 from inspect import stack
 from requests import post
 from tempfile import TemporaryFile
 from typing import Any, List, Dict, Callable, Optional, Union, Tuple
-from functools import reduce
 from os.path import join
 from socket import timeout
-from logging import getLogger, Formatter, FileHandler, StreamHandler, DEBUG, INFO, WARNING, ERROR, Logger
+from logging import getLogger, Formatter, StreamHandler, DEBUG, Logger
 from functools import reduce
 from re import search
 
@@ -301,6 +299,33 @@ class Jobs(API):
             ),
         )['accepted_molids']
 
+
+class QM_Calculations(API):
+
+    def __init__(self, api: API) -> None:
+        self.api = api
+
+    def url(self, api_endpoint: Optional[str] = None) -> str:
+        return self.api.url(self.__class__.__name__.lower(), api_endpoint=api_endpoint)
+
+    def finished(self, molids: List[int] = [], qm_logs: List[str] = [], qm_calculation_types: List[str] = [], method: str = 'POST', **kwargs: Dict[str, Any]) -> API_RESPONSE:
+        return self.api.deserialize(
+            self.api.safe_urlopen(
+                self.url(),
+                data=(
+                    list(kwargs.items())
+                    +
+                    [('molid', molid) for molid in molids]
+                    +
+                    [('qm_log', qm_log) for qm_log in qm_logs]
+                    +
+                    [('qm_calculation_type', qm_calculation_type) for qm_calculation_type in qm_calculation_types]
+                ),
+                method=method,
+            ),
+        )['accepted_molids']
+
+
 class RMSD(API):
     def __init__(self, api: API) -> None:
         self.api = api
@@ -513,8 +538,6 @@ def test_api_client():
     print(mols[0].job(qm_level=2))
 
     exit()
-
-# 
 
 if __name__ == '__main__':
     test_api_client()

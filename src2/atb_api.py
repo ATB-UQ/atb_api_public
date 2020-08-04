@@ -298,6 +298,32 @@ class Jobs(API):
             ),
         )[u'accepted_molids']
 
+
+class QM_Calculations(API):
+    def __init__(self, api):
+        self.api = api
+
+    def url(self, api_endpoint = None):
+        return self.api.url(self.__class__.__name__.lower(), api_endpoint=api_endpoint)
+
+    def finished(self, molids = [], qm_logs = [], qm_calculation_types = [], method = u'POST', **kwargs):
+        return self.api.deserialize(
+            self.api.safe_urlopen(
+                self.url(),
+                data=(
+                    list(kwargs.items())
+                    +
+                    [(u'molid', molid) for molid in molids]
+                    +
+                    [(u'qm_log', qm_log) for qm_log in qm_logs]
+                    +
+                    [(u'qm_calculation_type', qm_calculation_type) for qm_calculation_type in qm_calculation_types]
+                ),
+                method=method,
+            ),
+        )[u'accepted_molids']
+
+
 class RMSD(API):
     def __init__(self, api):
         self.api = api
