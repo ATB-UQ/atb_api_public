@@ -216,6 +216,7 @@ class API(object):
         self.Molecules = Molecules(self)
         self.RMSD = RMSD(self)
         self.Jobs = Jobs(self)
+        self.QM_Calculations = QM_Calculations(self)
         self.Statistics = Statistics(self)
 # 
 
