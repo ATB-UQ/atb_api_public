@@ -480,8 +480,14 @@ METHODS = {
         ('new', 'molids', 'GET'),
         ('accept', 'molids', 'GET'),
         ('release', 'molids', 'GET'),
-        ('sync', 'molids', 'GET'),
-# 
+        ('sync', None, 'GET'),
+    ],
+    QM_Calculations: [
+            ('get', 'jobs', 'GET'),
+            ('new', 'molids', 'GET'),
+            ('accept', 'molids', 'GET'),
+            ('release', 'molids', 'GET'),
+            ('sync', None, 'GET'),
     ],
     Statistics: [
         ('charge_distribution', 'data', 'GET'),
