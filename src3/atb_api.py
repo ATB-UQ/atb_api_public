@@ -485,6 +485,8 @@ METHODS = {
     ],
     QM_Calculations: [
             ('get', 'jobs', 'GET'),
+            ('get_specific', 'jobs', 'GET'),
+            ('get_clinical_without_high_level', 'jobs', 'GET'),
             ('new', 'molids', 'GET'),
             ('accept', 'molids', 'GET'),
             ('release', 'molids', 'GET'),
