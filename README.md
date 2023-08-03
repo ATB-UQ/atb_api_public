@@ -1,16 +1,16 @@
 # Automated Topology Builder (ATB) API Version 0.1
 
-Author: Bertrand Caron
-
-[![DOI](https://zenodo.org/badge/86009503.svg)](https://zenodo.org/badge/latestdoi/86009503)
-
 ## Installation
 
-```
-git clone git@github.com:bertrand-caron/atb_api_public.git
-cd atb_api_public
-make install-user # Try running 'python setup.py install' if it fails
-```
+The ATB API can be installed directly from this remote repository using pip:
+
+```pip install git+https://github.com/ATB-UQ/atb_api_public.git```
+
+Or by cloning this repository and installing from the within the source directory:
+
+```pip install .```
+
+More installation options are outlined in the documentation.
 
 ## Example use
 

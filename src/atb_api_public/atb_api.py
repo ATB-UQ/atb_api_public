@@ -57,7 +57,7 @@ def deserializer_fct_for(api_format: str) -> Callable[[str], API_RESPONSE]:
     if api_format == 'json':
         deserializer_fct = lambda x: json.loads(x)
     elif api_format == 'yaml':
-        deserializer_fct = lambda x: yaml.load(x)
+        deserializer_fct = lambda x: yaml.safe_load(x)
     elif api_format == 'pickle':
         deserializer_fct = lambda x: pickle.loads(x)
     else:
