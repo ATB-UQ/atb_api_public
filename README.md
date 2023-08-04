@@ -10,7 +10,6 @@ Or by cloning this repository and installing from the within the source director
 
 ```pip install .```
 
-More installation options are outlined in the documentation.
 
 ## Example use
 
