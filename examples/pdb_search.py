@@ -1,9 +1,9 @@
 import pathlib
-from atb_api_public.atb_api import API
+from atb_api import API
 
 PDB_FILES = pathlib.Path("./example_pdbs")
 
-api = API(api_token='<ATB API TOKEN>', api_format='yaml', debug=True, timeout=60)
+api = API(api_token='<ATB API TOKEN>', api_format='yaml', timeout=60)
 
 matches = []
 missing = []

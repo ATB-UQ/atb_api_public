@@ -1,4 +1,4 @@
-from atb_api_public.atb_api import API
+from atb_api import API
 
 # Send an email to the ATB administrators to request an API token
 api = API(api_token='<ATB API TOKEN>', api_format='yaml', debug=True, timeout=60)
