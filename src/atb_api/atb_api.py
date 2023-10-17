@@ -474,6 +474,7 @@ METHODS = {
         ('generate_mol_data', None, 'GET'),
         ('output_file', 'output_file', 'GET'),
         ('download_files', 'data', 'GET'),
+        ('conformations', None, 'GET'),
 # 
     ],
     Jobs: [
@@ -512,6 +513,7 @@ for namespace in METHODS.keys():
             function,
         )
 
+
 def test_api_client():
     api = API(api_token='<put your token here>', debug=True, api_format='yaml', host='https://atb.uq.edu.au', debug_stream=sys.stderr, timeout=30, maximum_attempts=5)
 
@@ -546,7 +548,6 @@ def test_api_client():
 
     print(mols[0].job(qm_level=2))
 
-    exit()
 
 if __name__ == '__main__':
     test_api_client()
