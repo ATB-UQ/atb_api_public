@@ -492,6 +492,7 @@ METHODS = {
             ('accept', 'molids', 'GET'),
             ('release', 'molids', 'GET'),
             ('sync', None, 'GET'),
+            ('gaussian_input', "data", 'GET'),
     ],
     Statistics: [
         ('charge_distribution', 'data', 'GET'),
