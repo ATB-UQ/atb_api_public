@@ -3,20 +3,31 @@ from atb_api import API
 # Send an email to the ATB administrators to request an API token
 api = API(api_token='<ATB API TOKEN>', api_format='yaml', debug=True, timeout=60)
 
-print(api.Molecules.molid(molid=21))
 
-molecules = api.Molecules.search(common_name='Pterostilbene', match_partial=False)
+def get_molecule_info(molid):
+    print(api.Molecules.molid(molid=molid))
 
-for molecule in molecules:
+
+def get_submitted_pdb(molid):
+    api.Molecules.download_file(atb_format="")
+
+
+def search_by_common_name(common_name):
+    print("Searching for: {}".format(common_name))
+    molecules = api.Molecules.search(common_name=common_name, match_partial=False)
+
+    molecule = molecules[0]
     print(molecule.inchi)
-    pdb_path = '{molid}.pdb'.format(molid=molecule.molid)
-    molecule.download_file(fnme=pdb_path, atb_format='pdb_aa')
+    return molecule.download_file(atb_format='pdb_aa')
 
-    with open(pdb_path) as fh:
-        pdb_str = fh.read()
 
-print(api.Molecules.structure_search(structure_format='pdb', structure=pdb_str, netcharge='*'))
+def submit_existing_molecule(pdb_str, net_charge):
+    # This will and should fail, as we are trying to resubmit a molecule already in the database.
+    print(api.Molecules.submit(pdb=pdb_str, netcharge=net_charge, moltype='heteromolecule', public=True))
 
-# This will and should fail, as we are trying to resubmit a molecule already in the database.
-print(api.Molecules.submit(pdb=pdb_str, netcharge=0, moltype='heteromolecule', public=True))
 
+if __name__ == "__main__":
+    get_molecule_info(21)
+    get_submitted_pdb(21)
+    pdb_str = search_by_common_name('Piracetam')
+    submit_existing_molecule(pdb_str, 0)
