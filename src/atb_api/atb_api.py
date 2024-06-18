@@ -488,6 +488,7 @@ METHODS = {
             ('get', 'jobs', 'GET'),
             ('get_specific', 'jobs', 'GET'),
             ('get_clinical_without_high_level', 'jobs', 'GET'),
+            ('get_ESP_errors', 'jobs', 'GET'),
             ('new', 'molids', 'GET'),
             ('accept', 'molids', 'GET'),
             ('release', 'molids', 'GET'),
