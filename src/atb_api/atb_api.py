@@ -326,6 +326,37 @@ class QM_Calculations(API):
             ),
         )['accepted_molids']
 
+    def store_qm_data(self, molid: int, qm_calculation_type: str, qm_data: str, geometry_pdb: str = '', method: str = 'POST', **kwargs: Dict[str, Any]) -> API_RESPONSE:
+        '''Return the result of a calculation run by a QM code that produces no GAMESS log.
+
+        finished() is the GAMESS route: it sends a log, and the server parses it.
+        An xTB or PySCF calculation produces the parsed QM-data dictionary
+        directly, so this sends that instead, as JSON, together with the relaxed
+        geometry as a PDB (the one coordinate format the rest of the ATB can feed
+        to a later QM input).
+
+        POST because the payload is a whole QM-data dict, well past what a URL can
+        carry. The response says whether the server accepted the result and, when
+        it did not, why -- an unconverged optimisation or one that changed the
+        molecule's connectivity is rejected, not stored.
+        '''
+        return self.api.deserialize(
+            self.api.safe_urlopen(
+                self.url(),
+                data=(
+                    list(kwargs.items())
+                    +
+                    [
+                        ('molid', molid),
+                        ('qm_calculation_type', qm_calculation_type),
+                        ('qm_data', qm_data),
+                        ('geometry_pdb', geometry_pdb),
+                    ]
+                ),
+                method=method,
+            ),
+        )
+
 
 class RMSD(API):
     def __init__(self, api: API) -> None:
@@ -487,6 +518,9 @@ METHODS = {
     QM_Calculations: [
             ('get', 'jobs', 'GET'),
             ('get_specific', 'jobs', 'GET'),
+            # Input for a calculation run by a non-GAMESS QM code (xTB, PySCF):
+            # a starting geometry and net charge instead of a GAMESS input deck.
+            ('get_local', 'jobs', 'GET'),
             ('get_clinical_without_high_level', 'jobs', 'GET'),
             ('new', 'molids', 'GET'),
             ('accept', 'molids', 'GET'),
