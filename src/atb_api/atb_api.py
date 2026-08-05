@@ -357,6 +357,35 @@ class QM_Calculations(API):
             ),
         )
 
+    def report_local_failure(self, molid: int, qm_calculation_type: str, status: str, reason: str = '', method: str = 'POST', **kwargs: Dict[str, Any]) -> API_RESPONSE:
+        '''Report that a locally-run calculation produced nothing to store.
+
+        The counterpart to store_qm_data, for the case where there is no result to
+        send: the QM code could not run the molecule (status ERROR) or the
+        optimisation never converged (NOT_CONVERGED). Without this the ATB's record
+        of the calculation stops at "handed out", and the molecule looks like one
+        still being calculated for as long as the row survives.
+
+        A result the server itself judged unusable is *not* reported here -- that
+        verdict is the response to store_qm_data, and the server records it.
+        '''
+        return self.api.deserialize(
+            self.api.safe_urlopen(
+                self.url(),
+                data=(
+                    list(kwargs.items())
+                    +
+                    [
+                        ('molid', molid),
+                        ('qm_calculation_type', qm_calculation_type),
+                        ('status', status),
+                        ('reason', reason),
+                    ]
+                ),
+                method=method,
+            ),
+        )
+
 
 class RMSD(API):
     def __init__(self, api: API) -> None:
