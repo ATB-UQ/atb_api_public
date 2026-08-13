@@ -161,6 +161,7 @@ class API(object):
                 request = post(
                     full_url,
                     files=files,
+                    headers=self._internal_token_headers(),
                 )
                 response_content = request.text
 
@@ -171,6 +172,7 @@ class API(object):
                     Request(
                         full_url,
                         data=self.encoded(urlencode(data_items),) if data_items is not None else None,
+                        headers=self._internal_token_headers(),
                     ),
                     timeout=self.timeout,
                 )
@@ -200,10 +202,15 @@ class API(object):
 
         return response_content
 
-    def __init__(self, host: str = HOST, api_token: Optional[str] = None, debug: bool = False, timeout: int = TIMEOUT, api_format: str = API_FORMAT, debug_stream: Any = DEFAULT_DEBUG_STREAM, maximum_attempts: int = 1) -> None:
+    def __init__(self, host: str = HOST, api_token: Optional[str] = None, internal_token: Optional[str] = None, debug: bool = False, timeout: int = TIMEOUT, api_format: str = API_FORMAT, debug_stream: Any = DEFAULT_DEBUG_STREAM, maximum_attempts: int = 1) -> None:
         # Attributes
         self.host = host
         self.api_token = api_token
+        # Shared-secret header used by ATB's own internal callers (task
+        # scripts, compute workers) in place of the retired GOD_IP allowlist.
+        # Of no use to a public caller, who has an api_token instead; it is here
+        # so the internal callers can share one client rather than fork it.
+        self.internal_token = internal_token
         self.api_format = api_format
         self.debug = debug
         self.debug_stream = debug_stream
@@ -219,6 +226,9 @@ class API(object):
         self.QM_Calculations = QM_Calculations(self)
         self.Statistics = Statistics(self)
 # 
+
+    def _internal_token_headers(self) -> Dict[str, str]:
+        return {'X-ATB-Internal-Token': self.internal_token} if self.internal_token else {}
 
     def deserialize(self, an_object: Any) -> Any:
         try:
