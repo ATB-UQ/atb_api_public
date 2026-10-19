@@ -561,10 +561,12 @@ METHODS = {
             # a starting geometry and net charge instead of a GAMESS input deck.
             ('get_local', 'jobs', 'GET'),
             ('get_clinical_without_high_level', 'jobs', 'GET'),
+            ('get_ESP_errors', 'jobs', 'GET'),
             ('new', 'molids', 'GET'),
             ('accept', 'molids', 'GET'),
             ('release', 'molids', 'GET'),
             ('sync', None, 'GET'),
+            ('gaussian_input', "data", 'GET'),
     ],
     Statistics: [
         ('charge_distribution', 'data', 'GET'),
