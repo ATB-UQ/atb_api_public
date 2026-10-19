@@ -243,7 +243,7 @@ class API(object):
     def url(self, api_namespace: str, api_endpoint: Optional[str] = None) -> str:
         try:
             api_method = (API.FUNCTION_NAME(API.TWO_FRAMES_ABOVE(stack())) if api_endpoint is None else api_endpoint) + '.py'
-            assert search('^[a-zA-Z0-9-_]+\.py$', api_method), api_method
+            assert search(r'^[a-zA-Z0-9-_]+\.py$', api_method), api_method
 
             return join(
                 self.host,
