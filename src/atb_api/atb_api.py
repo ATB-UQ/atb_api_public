@@ -125,7 +125,10 @@ class API(object):
         else:
             raise Exception('Unexpected type: {0}'.format(type(data)))
 
-        data_items += [('api_token', self.api_token), ('api_format', self.api_format)]
+        # The api_token goes in a header (_auth_headers), never into data_items: a GET's query
+        # string is written into the server's access log, and full_url into this client's
+        # debug log and exceptions.
+        data_items += [('api_format', self.api_format)]
 
         try:
             if method == 'GET':
@@ -161,7 +164,7 @@ class API(object):
                 request = post(
                     full_url,
                     files=files,
-                    headers=self._internal_token_headers(),
+                    headers=self._auth_headers(),
                 )
                 response_content = request.text
 
@@ -172,7 +175,7 @@ class API(object):
                     Request(
                         full_url,
                         data=self.encoded(urlencode(data_items),) if data_items is not None else None,
-                        headers=self._internal_token_headers(),
+                        headers=self._auth_headers(),
                     ),
                     timeout=self.timeout,
                 )
@@ -227,8 +230,11 @@ class API(object):
         self.Statistics = Statistics(self)
 # 
 
-    def _internal_token_headers(self) -> Dict[str, str]:
-        return {'X-ATB-Internal-Token': self.internal_token} if self.internal_token else {}
+    def _auth_headers(self) -> Dict[str, str]:
+        headers = {'X-ATB-API-Token': self.api_token} if self.api_token else {}
+        if self.internal_token:
+            headers['X-ATB-Internal-Token'] = self.internal_token
+        return headers
 
     def deserialize(self, an_object: Any) -> Any:
         try:
